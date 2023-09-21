@@ -16,7 +16,7 @@ def min_max_scaling(data):
 def sigmoid(X):
     lines = []
     for x in X:
-        print(f"=> 1/1+exp(-{np.round(x,3)})")
+        print(f"- 1/1+exp(-{np.round(x,3)})")
         line = f"1/1+exp(-{np.round(x,3)})"
         lines.append(line)
         
@@ -27,16 +27,40 @@ def sigmoid(X):
 
 def compute_forward(W,b,X):
     
-    store_lines = []
-    for x, weight in zip(X, W):
-        lines = []
-        for element in x:
-            line = f"{np.round(element,2)} x {weight} + {b}"
+#     store_lines = []
+#     for x, weight in zip(X, W):
+#         lines = []
+#         for element in x:
+#             line = f"{np.round(element,2)} x {weight} + {b}"
+#             lines.append(line)
+#         store_lines.append(lines)
+
+    for x in X:
+        lines = []  # Initialize lines for this x
+        for weight, element in zip(W, x):
+            line = f"{np.round(element, 2)} x {weight} + {b}"
             lines.append(line)
-        store_lines.append(lines)
 
+        # Append the lines to store_lines only if they haven't been added before
+        if lines not in store_lines:
+            store_lines.append(lines)
 
-    print(f"z = \n",np.array(['+'.join(x) for x in store_lines]))
+    # Print the stored lines
+    final_lines = []
+    for lines in store_lines:
+        final_line = ''
+        for line in lines:
+            final_line += line
+        final_lines.append(final_line)
+
+#     final_lines
+
+    print('Z=\n',end='')
+    print("[",end="")
+    for line in final_lines:
+        print(line)
+    
+    print("]")
     print()
     
     z = np.dot(X,W) + b
@@ -47,7 +71,7 @@ def compute_loss(y, yhat):
     loss = []
     print('Loss Computing - Steps')
     for y_true, y_pred in zip(y, yhat):
-        print(f"=> {np.round(y_true,2)} * log({np.round(y_pred,2)}) + (1 - {np.round(y_true,2)}) * log(1 - {np.round(y_pred,2)})")
+        print(f"- {np.round(y_true,2)} * log({np.round(y_pred,2)}) + (1 - {np.round(y_true,2)}) * log(1 - {np.round(y_pred,2)})")
         bce = (y_true * np.log(y_pred) + (1 - y_true) * np.log(1 - y_pred))
         loss.append(bce)
     print('--'*25)
